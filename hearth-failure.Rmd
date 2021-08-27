@@ -14,6 +14,7 @@ library(tidyverse)
 library(readr)
 ```
 
+### Limpieza de datos
 
 ```{r}
 df <- read_csv("data/heart_failure.csv")
@@ -50,7 +51,8 @@ df$DEATH_EVENT <- as.factor(df$DEATH_EVENT)
 str(heartfa)
 ```
 
-Listo! vamos analizar datos <3   ass
+### Analisis de datos!
+
 
 ```{r}
 df %>% 
@@ -59,10 +61,44 @@ df %>%
         name = "Total")
 ```
 
+
+```{r}
+ggplot(df, aes(x = age)) +
+  geom_density(fill = "indianred3") + 
+  labs(title = "Participants por edad")
+```
+
+
+
 ```{r}
 ggplot(df, 
        aes(x = age, 
            fill = DEATH_EVENT)) +
-  geom_density(alpha = 0.4) 
+  geom_histogram(alpha = 1,
+                 color = "white",
+                 bins = 20) +
+  labs(title="Histograma de edades con evento de muerte",
+       x="Edades",
+       y="Total") +
+  theme_classic()
 ```
 
+```{r}
+ggplot(df, 
+       aes(x = ejection_fraction, 
+           fill = DEATH_EVENT)) +
+  geom_histogram(alpha = 1,
+                 color = "white",
+                 bins = 12) +
+  labs (title="Porcentaje de sangre que abandona el corazon por bombeo",
+        x="",
+        y="Total") + 
+  theme_classic()
+
+```
+
+
+
+
+
+### Modelaje de datos

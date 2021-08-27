@@ -1,0 +1,9 @@
+anemia = 0 no, 1 si
+creatinie = Level of the CPK enzyme in the blood
+diabetes = 0 no, 1 si
+ejection_fraction = Percentage of blood leaving the heart at each contraction (percentage)
+high_blood_pressure = If the patient has hypertension, 0 no, 1 si
+serum_creatinine = Level of serum creatinine in the blood (
+smoking = si el paciente fuma o no, 0 no, 1 si
+death_event = muerte durante el periodo de seguimient, 0 no, 1 si
+time = follow up al paciente
