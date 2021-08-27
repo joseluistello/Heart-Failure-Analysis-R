@@ -1,0 +1,68 @@
+---
+title: "Heart-Failure"
+author: "José Luis Tello"
+date: "26/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+```
+
+
+```{r}
+df <- read_csv("data/heart_failure.csv")
+```
+
+Checando valores perdidos
+
+```{r}
+sum(is.na(df))
+```
+
+
+Ahora vere que datos necesito transformar
+
+
+```{r}
+str(df)
+```
+
+
+Anemia, diabetes, high_blood, sexo, smoking y death_event deben ser factor
+
+```{r}
+df$anaemia <- as.factor(df$anaemia)
+df$diabetes <- as.factor(df$diabetes)
+df$high_blood_pressure <- as.factor(df$high_blood_pressure)
+df$sex <- as.factor(df$sex)
+df$smoking <- as.factor(df$smoking)
+df$DEATH_EVENT <- as.factor(df$DEATH_EVENT)
+```
+
+
+```{r}
+str(heartfa)
+```
+
+Listo! vamos analizar datos <3   ass
+
+```{r}
+df %>% 
+  count(age,
+        sort = TRUE,
+        name = "Total")
+```
+
+```{r}
+ggplot(df, 
+       aes(x = age, 
+           fill = DEATH_EVENT)) +
+  geom_density(alpha = 0.4) 
+```
+
