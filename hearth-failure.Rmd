@@ -15,31 +15,27 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(readr)
-library(ggcorrplot)
+library(skimr)
+library(corrplot)
 ```
 
-### Limpieza de datos
+
+
+### Limpieza y transformacion de datos 
 
 ```{r}
 df <- read_csv("data/heart_failure.csv")
 ```
 
-Checando valores perdidos
 
 ```{r}
 sum(is.na(df))
 ```
 
-
-Ahora vere que datos necesito transformar
-
-
 ```{r}
 str(df)
 ```
 
-
-Anemia, diabetes, high_blood, sexo, smoking y death_event deben ser factor
 
 ```{r}
 df$anaemia <- as.factor(df$anaemia)
@@ -50,26 +46,66 @@ df$smoking <- as.factor(df$smoking)
 df$DEATH_EVENT <- as.factor(df$DEATH_EVENT)
 ```
 
-
 ```{r}
 str(df)
 ```
 
 ### Analisis de datos!
 
-
 ```{r}
-df %>% 
-  count(age,
-        sort = TRUE,
-        name = "Total")
+skim(df)
 ```
 
 
 ```{r}
-ggplot(df, aes(x = age)) +
-  geom_density(fill = "indianred3") + 
-  labs(title = "Participantes por edad")
+df %>% 
+  group_by(sex, age) %>% 
+  count(age,
+        sort = TRUE,
+        name = "Total") 
+```
+
+```{r}
+summary(df)
+```
+
+
+```{r}
+df %>% 
+  select(creatinine_phosphokinase, ejection_fraction, platelets,
+         serum_sodium, serum_creatinine) %>% 
+  plot()
+```
+
+
+```{r}
+ggplot(df, aes(x = serum_sodium)) + 
+  geom_histogram(binwidth = 1, colour = "black", fill = "aquamarine3", alpha = 1) +
+  geom_density(eval(bquote(aes(y = ..count.. * 1))), colour = "white", fill = "aquamarine4", alpha = 0.35) +
+  geom_vline(xintercept = median(df$serum_sodium), linetype="longdash") +
+  annotate(geom = "text",
+           x = min(df$serum_sodium)+4, y = 36,
+           label = str_c("Minimo.     : ", min(df$serum_sodium),
+                         "\nMedianana : ", median(df$serum_sodium),
+                         "\nPromedio    : ", round(mean(df$serum_sodium), 1),
+                         "\nMaximo.    : ", max(df$serum_sodium))) +
+  labs(title = "Distribucion del suero de sodio") +
+  theme_classic()
+```
+
+
+```{r}
+ggplot(df, aes(x = ejection_fraction, fill = DEATH_EVENT)) + 
+  geom_density(alpha = 0.64)
+```
+
+
+```{r}
+ggplot(df, aes(x = age, fill = sex)) +
+  geom_density(alpha = 1,
+               color = "white") + 
+  labs(title = "Participantes por edad") +
+  theme_classic()
 ```
 
 
@@ -102,12 +138,17 @@ ggplot(df,
 ```
 
 
+```{r}
+
+```
+
 
 ### Modelaje de datos
 
 
 ```{r}
 library(tidymodels)
+library(rpart)
 ```
 
 ```{r}
@@ -116,7 +157,7 @@ library(rpart)
 
 
 ```{r}
-set.seed(123)
+set.seed(0)
 df_split <- initial_split(df)
 df_train <- training(df_split)
 df_test <- testing(df_split)
