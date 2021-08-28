@@ -52,7 +52,7 @@ df$DEATH_EVENT <- as.factor(df$DEATH_EVENT)
 
 
 ```{r}
-str(heartfa)
+str(df)
 ```
 
 ### Analisis de datos!
@@ -69,7 +69,7 @@ df %>%
 ```{r}
 ggplot(df, aes(x = age)) +
   geom_density(fill = "indianred3") + 
-  labs(title = "Participants por edad")
+  labs(title = "Participantes por edad")
 ```
 
 
@@ -104,5 +104,53 @@ ggplot(df,
 
 
 ### Modelaje de datos
+
+
+```{r}
+library(tidymodels)
+```
+
+```{r}
+library(rpart)
+```
+
+
+```{r}
+set.seed(123)
+df_split <- initial_split(df)
+df_train <- training(df_split)
+df_test <- testing(df_split)
+```
+
+```{r}
+model1 <- rpart(DEATH_EVENT ~ diabetes, data = df_train, method="class")
+```
+
+```{r}
+library(caret)
+options(digits = 4)
+```
+
+```{r}
+library(e1071)
+```
+
+
+```{r}
+Predict_model1_train <- predict(model1, df_train, type = "class")
+```
+
+```{r}
+conMat <- confusionMatrix(as.factor(Predict_model1_train), as.factor(df_train$DEATH_EVENT))
+```
+
+```{r}
+conMat$table
+```
+
+```{r}
+predict_train_accuracy <- conMat$overall["Accuracy"]
+predict_train_accuracy
+```
 
 
